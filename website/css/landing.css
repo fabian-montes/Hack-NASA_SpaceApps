@@ -1,0 +1,224 @@
+/* ==========================================================================
+   OUTPOST HORIZONS - LANDING PAGE STYLES (landing.css)
+   Specific to index.html: Hero, Cards, Grids, and NASA Telemetry Banner
+   ========================================================================== */
+
+/* Hero Section */
+.hero-section {
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 0 2rem;
+  border-bottom: 1px solid var(--border-line);
+  background: radial-gradient(circle at 50% 30%, rgba(0, 229, 255, 0.09) 0%, transparent 65%);
+}
+
+.telemetry-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 1rem;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid var(--border-line);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+  letter-spacing: 1.5px;
+  margin-bottom: 1.5rem;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-green);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-green);
+}
+
+.glitch-title {
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-shadow: 0 0 24px rgba(0, 229, 255, 0.3);
+  margin-bottom: 1.25rem;
+}
+
+.hero-lead {
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
+}
+
+.quick-specs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-top: 1px dashed rgba(122, 151, 184, 0.25);
+  padding-top: 1.5rem;
+}
+
+/* Info Sections & Grids */
+.info-section {
+  padding: 4.5rem 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.alt-bg {
+  background: rgba(12, 20, 32, 0.5);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+}
+
+/* Telemetry Cards */
+.telemetry-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-line);
+  padding: 2rem;
+  border-radius: var(--radius-sm);
+}
+
+.telemetry-card.warning-border {
+  border-color: rgba(255, 109, 0, 0.5);
+}
+
+.card-code {
+  font-size: 0.75rem;
+  color: var(--accent-cyan);
+  margin-bottom: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.telemetry-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.telemetry-card p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+/* Difficulty Protocol Cards */
+.protocol-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-cyan,
+.tag-orange {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  font-weight: bold;
+  border-radius: var(--radius-sm);
+}
+
+.tag-cyan {
+  background: var(--accent-cyan-glow);
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+}
+
+.tag-orange {
+  background: var(--accent-orange-glow);
+  color: var(--accent-orange);
+  border: 1px solid var(--accent-orange);
+}
+
+.telemetry-list {
+  margin-top: 1.25rem;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.telemetry-list li {
+  margin-bottom: 0.6rem;
+}
+
+.telemetry-list strong {
+  color: var(--text-primary);
+}
+
+/* NASA Open Data Banner */
+.nasa-data-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-line);
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.nasa-panel-text {
+  flex: 1 1 500px;
+}
+
+.nasa-panel-text h2 {
+  margin-bottom: 0.75rem;
+}
+
+.nasa-panel-text p {
+  color: var(--text-muted);
+}
+
+.nasa-panel-badges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.data-badge {
+  background: var(--bg-deep);
+  border: 1px solid var(--accent-cyan);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.data-badge span {
+  font-size: 0.7rem;
+  color: var(--accent-cyan);
+}
+
+.data-badge strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin: 0.2rem 0;
+}
+
+.data-badge small {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
