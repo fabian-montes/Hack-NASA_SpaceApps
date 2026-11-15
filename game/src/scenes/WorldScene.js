@@ -1,5 +1,14 @@
 // game/src/scenes/WorldScene.js
 import { Character } from '../entities/Character.js';
+import { PlanetGround } from '../systems/PlanetGround.js';
+
+// Planet surface presets (Pale Watercolor Palette)
+const PLANET_PALETTES = {
+  MARS: 0xd97254,     // Terracotta rust
+  MOON: 0xcbd2d9,     // Regolith ash grey
+  EUROPA: 0x90cdf4,   // Pale glacial cyan
+  TITAN: 0xd69e2e     // Ochre hydrocarbon haze
+};
 
 export class WorldScene extends Phaser.Scene {
   constructor() {
@@ -11,14 +20,19 @@ export class WorldScene extends Phaser.Scene {
   }
 
   create() {
-    // 1. Set World Boundaries (Procedural sector size)
-    this.physics.world.setBounds(0, 0, 2000, 2000);
-    this.cameras.main.setBounds(0, 0, 2000, 2000);
+    const WORLD_WIDTH = 2000;
+    const WORLD_HEIGHT = 2000;
 
-    // 2. Watercolor Paper Grid Background
-    this.add.grid(
-      1000, 1000, 2000, 2000, 64, 64,
-      0xf6f3ec, 1, 0x1e2530, 0.08
+    // 1. Set World Boundaries
+    this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+    this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+
+    // 2. Procedural Watercolor Planet Surface
+    this.ground = new PlanetGround(
+      this,
+      WORLD_WIDTH,
+      WORLD_HEIGHT,
+      PLANET_PALETTES.MARS // <-- Cambia aquí a MOON, EUROPA o TITAN
     );
 
     // 3. Instantiate Player Character at Center
@@ -27,7 +41,7 @@ export class WorldScene extends Phaser.Scene {
     // 4. Smooth Camera Follow
     this.cameras.main.startFollow(this.player, true, 0.15, 0.15);
 
-    // 5. Debug HUD (Fixed to Camera)
+    // 5. Debug HUD
     this.debugText = this.add.text(20, 20, '', {
       fontFamily: 'JetBrains Mono, monospace',
       fontSize: '14px',
@@ -40,13 +54,12 @@ export class WorldScene extends Phaser.Scene {
   update() {
     this.player.update();
 
-    // Live telemetry readout for MVP verification
     const currentAnim = this.player.anims.currentAnim
       ? this.player.anims.currentAnim.key.toUpperCase()
       : 'IDLE';
 
     this.debugText.setText([
-      'OUTPOST HORIZONS // MVP CHARACTER TEST',
+      'OUTPOST HORIZONS // PLANET SURFACE TEST',
       'Controls: [ARROW KEYS] Move | [SPACE] Build',
       `State: ${currentAnim}`,
       `O2: ${this.player.stats.oxygen}% | PWR: ${this.player.stats.power}%`

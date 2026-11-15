@@ -27,6 +27,7 @@ export class Character extends BaseEntity {
     this.initAnimations();
     this.initControls();
     this.play('idle');
+    this.setScale(0.35);
   }
 
   // 2. Spritesheet Loader (Called in WorldScene preload)
