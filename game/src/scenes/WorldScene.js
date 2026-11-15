@@ -17,6 +17,14 @@ export class WorldScene extends Phaser.Scene {
     super('WorldScene');
   }
 
+  init(data) {
+    this.missionData = data || {
+      mode: 'SURVIVORS',
+      planet: { title: 'MARS', groundColor: 0xd97254, propTint: 0xffd6c9 },
+      crew: ['commander']
+    };
+  }
+
   preload() {
     Character.preload(this);
     MapGenerator.preload(this);
@@ -37,7 +45,7 @@ export class WorldScene extends Phaser.Scene {
       this,
       WORLD_WIDTH,
       WORLD_HEIGHT,
-      currentPlanet.ground
+      this.missionData.planet.groundColor
     );
 
     // 3. Procedural Environment Props (Rocks, Trees, Vegetation)

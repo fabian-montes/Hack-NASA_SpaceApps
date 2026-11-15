@@ -1,4 +1,5 @@
 // game/src/config/GameConfig.js
+import { MenuScene } from '../scenes/MenuScene.js';
 import { WorldScene } from '../scenes/WorldScene.js';
 import { UIScene } from '../scenes/UIScene.js';
 
@@ -20,5 +21,5 @@ export const GameConfig = {
       debug: false
     }
   },
-  scene: [WorldScene, UIScene]
+  scene: [MenuScene, WorldScene, UIScene]
 };
