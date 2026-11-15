@@ -6,10 +6,11 @@ export const GameConfig = {
   parent: 'game-container',
   backgroundColor: '#f6f3ec',
   scale: {
-    mode: Phaser.Scale.RESIZE,
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: '100%',
-    height: '100%'
+    fullscreenTarget: 'game-container',
+    width: 1280,
+    height: 720
   },
   physics: {
     default: 'arcade',

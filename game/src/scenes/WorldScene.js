@@ -61,6 +61,8 @@ export class WorldScene extends Phaser.Scene {
       backgroundColor: '#ebe5d8',
       padding: { x: 10, y: 8 }
     }).setScrollFactor(0).setDepth(9999);
+
+    this.createFullscreenButton();
   }
 
   update() {
@@ -76,5 +78,39 @@ export class WorldScene extends Phaser.Scene {
       `State: ${currentAnim}`,
       `O2: ${this.player.stats.oxygen}% | PWR: ${this.player.stats.power}%`
     ]);
+  }
+
+  createFullscreenButton() {
+    const { width } = this.cameras.main;
+
+    const fsButton = this.add.text(width - 20, 20, '[ ⛶ FULLSCREEN ]', {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '14px',
+      fontStyle: 'bold',
+      color: '#ffffff',
+      backgroundColor: '#e05a36',
+      padding: { x: 12, y: 8 }
+    })
+    .setOrigin(1, 0)
+    .setScrollFactor(0)
+    .setDepth(9999)
+    .setInteractive({ useHandCursor: true });
+
+    const toggleScreen = () => {
+      if (this.scale.isFullscreen) {
+        this.scale.stopFullscreen();
+      } else {
+        this.scale.startFullscreen();
+      }
+    };
+
+    fsButton.on('pointerdown', toggleScreen);
+
+    // Update button label automatically when entering/exiting fullscreen (including ESC key)
+    this.scale.on('enterfullscreen', () => fsButton.setText('[ ✕ EXIT FULLSCREEN ]'));
+    this.scale.on('leavefullscreen', () => fsButton.setText('[ ⛶ FULLSCREEN ]'));
+
+    // Optional keyboard shortcut: 'F' key
+    this.input.keyboard.on('keydown-F', toggleScreen);
   }
 }

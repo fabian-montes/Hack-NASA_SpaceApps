@@ -13,11 +13,19 @@
   <!-- Base Variables + Dedicated Fullscreen Game CSS -->
   <link rel="stylesheet" href="../website/css/styles.css">
   <link rel="stylesheet" href="./css/game.css">
+  <link rel="stylesheet" href="./css/game-viewport.css">
 
   <!-- Phaser 3 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 </head>
-<body>
+<body class="game-page">
+
+  <div class="game-top-bar">
+    <a href="index.html" class="btn btn-outline" style="padding: 0.45rem 1rem; font-size: 0.82rem;">
+      ← BACK TO PORTAL
+    </a>
+    <span class="game-status-tag">CRASHLANDED // SIMULATION VIEWPORT</span>
+  </div>
 
   <!-- Dedicated Mount Point for Phaser 3 -->
   <div id="game-container"></div>
