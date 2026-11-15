@@ -1,3 +1,5 @@
+import { MobileControls } from '../systems/MobileControls.js';
+
 // game/src/scenes/UIScene.js
 export class UIScene extends Phaser.Scene {
   constructor() {
@@ -39,6 +41,7 @@ export class UIScene extends Phaser.Scene {
     this.createInventoryBar(width * 0.5, height - 46);
 
     this.createWorldMapOverlay(width, height);
+    this.mobileControls = new MobileControls(this);
   }
 
   // =========================================================================

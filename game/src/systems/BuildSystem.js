@@ -44,6 +44,12 @@ export class BuildSystem {
         this.tryDeployProbe();
       }
     });
+
+    this.scene.input.on('pointerdown', (pointer) => {
+      if (this.isBuildMode && !pointer.wasTouch && pointer.leftButtonDown()) {
+        this.tryDeployProbe();
+      }
+    });
   }
 
   toggleBuildMode() {

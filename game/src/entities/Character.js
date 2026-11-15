@@ -104,36 +104,43 @@ export class Character extends BaseEntity {
     this.isBuilding = false;
 
     // Priority 2: 4-Directional Movement (Arrow Keys)
+    // Dentro de update() en game/src/entities/Character.js (reemplaza el bloque de movimiento):
     const { left, right, up, down } = this.cursors;
     let vx = 0;
     let vy = 0;
 
+    // 1. Desktop Arrow Keys
     if (left.isDown) vx = -1;
     else if (right.isDown) vx = 1;
 
     if (up.isDown) vy = -1;
     else if (down.isDown) vy = 1;
 
+    // 2. Mobile Virtual Joystick Override (if moved)
+    const uiScene = this.scene.scene.get('UIScene');
+    if (uiScene && uiScene.mobileControls && uiScene.mobileControls.isActive) {
+      const joy = uiScene.mobileControls.vector;
+      if (Math.abs(joy.x) > 0.15 || Math.abs(joy.y) > 0.15) {
+        vx = joy.x;
+        vy = joy.y;
+      }
+    }
+
     if (vx !== 0 || vy !== 0) {
       this.body.setVelocity(vx, vy);
       this.body.velocity.normalize().scale(this.stats.speed);
 
-      // Play directional animation and mirror sprite horizontally for left/right
-      if (vy < 0 && vx === 0) {
+      if (Math.abs(vy) > Math.abs(vx) && vy < 0) {
         this.setFlipX(false);
         this.play('walk-up', true);
-      } else if (vy > 0 && vx === 0) {
-        this.setFlipX(false);
-        this.play('walk-side', true);
       } else if (vx < 0) {
-        this.setFlipX(true); // Mirror side walk for left
+        this.setFlipX(true);
         this.play('walk-side', true);
-      } else if (vx > 0) {
+      } else {
         this.setFlipX(false);
         this.play('walk-side', true);
       }
     } else {
-      // Priority 3: Default to IDLE
       this.play('idle', true);
     }
   }
