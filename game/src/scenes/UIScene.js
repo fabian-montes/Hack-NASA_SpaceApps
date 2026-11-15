@@ -37,6 +37,8 @@ export class UIScene extends Phaser.Scene {
     this.createInsightsPanel(20, 20);
     this.createVitalsHUD(width - 140, 62);
     this.createInventoryBar(width * 0.5, height - 46);
+
+    this.createWorldMapOverlay(width, height);
   }
 
   // =========================================================================
@@ -263,5 +265,164 @@ export class UIScene extends Phaser.Scene {
       });
       container.add(numLabel);
     }
+  }
+
+  // =========================================================================
+  // 4. COLLAPSIBLE TACTICAL WORLD MAP OVERLAY (BUTTON + 'M' KEY)
+  // =========================================================================
+  createWorldMapOverlay(screenW, screenH) {
+    this.isMapOpen = false;
+
+    // 1. Toggle Button (Bottom-Right Corner)
+    const btnW = 138;
+    const btnH = 42;
+    const btnX = screenW - btnW - 20;
+    const btnY = screenH - btnH - 24;
+
+    const btnContainer = this.add.container(btnX, btnY).setDepth(200);
+
+    const btnBg = this.add.graphics();
+    btnBg.fillStyle(this.palette.ink, 1);
+    btnBg.fillRoundedRect(3, 3, btnW, btnH, 8);
+    btnBg.fillStyle(this.palette.paper, 0.98);
+    btnBg.fillRoundedRect(0, 0, btnW, btnH, 8);
+    btnBg.lineStyle(2, this.palette.ink, 1);
+    btnBg.strokeRoundedRect(0, 0, btnW, btnH, 8);
+    btnContainer.add(btnBg);
+
+    this.mapBtnLabel = this.add.text(btnW * 0.5, btnH * 0.5, '🗺️ MAP [M]', {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '12px',
+      fontStyle: 'bold',
+      color: '#1e2530'
+    }).setOrigin(0.5);
+    btnContainer.add(this.mapBtnLabel);
+
+    // Hit area for mouse / touch toggle
+    const hitZone = this.add.zone(btnW * 0.5, btnH * 0.5, btnW, btnH)
+      .setInteractive({ useHandCursor: true });
+    hitZone.on('pointerdown', () => this.toggleWorldMap());
+    btnContainer.add(hitZone);
+
+    // Keyboard shortcut ('M' key)
+    this.input.keyboard.on('keydown-M', () => this.toggleWorldMap());
+
+    // 2. Full Collapsible Map Modal (Centered on Screen, Hidden by Default)
+    const mapW = 540;
+    const mapH = 400;
+    const mapX = (screenW - mapW) * 0.5;
+    const mapY = (screenH - mapH) * 0.5 - 10;
+
+    this.mapModal = this.add.container(mapX, mapY)
+      .setDepth(500)
+      .setVisible(false);
+
+    // Papercut card frame
+    const card = this.add.graphics();
+    card.fillStyle(this.palette.ink, 1);
+    card.fillRoundedRect(6, 6, mapW, mapH, 12);
+    card.fillStyle(this.palette.paper, 0.98);
+    card.fillRoundedRect(0, 0, mapW, mapH, 12);
+    card.lineStyle(2.5, this.palette.ink, 1);
+    card.strokeRoundedRect(0, 0, mapW, mapH, 12);
+    this.mapModal.add(card);
+
+    // Header Title & Close Hint
+    const title = this.add.text(18, 14, 'SECTOR RECON MAP // MARS QUADRANT 04', {
+      fontFamily: 'Space Grotesk, sans-serif',
+      fontSize: '15px',
+      fontStyle: 'bold',
+      color: '#1e2530'
+    });
+
+    const closeBtn = this.add.text(mapW - 18, 15, '[ ✕ CLOSE ]', {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '11px',
+      fontStyle: 'bold',
+      color: '#e05a36'
+    }).setOrigin(1, 0).setInteractive({ useHandCursor: true });
+    closeBtn.on('pointerdown', () => this.toggleWorldMap());
+
+    this.mapModal.add([title, closeBtn]);
+
+    // Inner Terrain Canvas (Pale Watercolor Martian Sector)
+    const innerX = 18;
+    const innerY = 44;
+    const innerW = mapW - 36;
+    const innerH = mapH - 96;
+
+    const mapCanvas = this.add.graphics();
+    mapCanvas.fillStyle(0xe8a590, 0.45); // Pale Martian watercolor surface
+    mapCanvas.fillRoundedRect(innerX, innerY, innerW, innerH, 8);
+
+    // Topographic contour circles & grid lines
+    mapCanvas.lineStyle(1, this.palette.ink, 0.14);
+    for (let gx = innerX + 45; gx < innerX + innerW; gx += 45) {
+      mapCanvas.lineBetween(gx, innerY, gx, innerY + innerH);
+    }
+    for (let gy = innerY + 45; gy < innerY + innerH; gy += 45) {
+      mapCanvas.lineBetween(innerX, gy, innerX + innerW, gy);
+    }
+
+    // Sketched crater rings
+    mapCanvas.lineStyle(1.5, this.palette.ink, 0.25);
+    mapCanvas.strokeCircle(innerX + 140, innerY + 95, 42);
+    mapCanvas.strokeCircle(innerX + 360, innerY + 190, 58);
+    mapCanvas.strokeCircle(innerX + 260, innerY + 70, 24);
+
+    // Dashed route path from Crash Site to Extraction Beacon
+    mapCanvas.lineStyle(2, this.palette.cyan, 0.85);
+    mapCanvas.beginPath();
+    mapCanvas.moveTo(innerX + 110, innerY + 210);
+    mapCanvas.lineTo(innerX + 240, innerY + 150);
+    mapCanvas.lineTo(innerX + 410, innerY + 75);
+    mapCanvas.strokePath();
+
+    // Inner map border
+    mapCanvas.lineStyle(2, this.palette.ink, 1);
+    mapCanvas.strokeRoundedRect(innerX, innerY, innerW, innerH, 8);
+    this.mapModal.add(mapCanvas);
+
+    // Map Markers (Crash Site, Commander, Extraction Beacon, Anomaly)
+    this.addMapPin(innerX + 110, innerY + 210, this.palette.orange, 'CRASH SITE');
+    this.addMapPin(innerX + 240, innerY + 150, this.palette.cyan, 'YOU (COMMANDER)');
+    this.addMapPin(innerX + 410, innerY + 75, this.palette.green, 'EXTRACTION');
+    this.addMapPin(innerX + 355, innerY + 195, this.palette.amber, '? RELIC SIGNAL');
+
+    // Bottom Legend Bar
+    const legend = this.add.text(
+      18,
+      mapH - 36,
+      '● CRASHLANDING   ● COMMANDER   ● EXTRACTION POINT   ● ANOMALY',
+      {
+        fontFamily: 'JetBrains Mono, monospace',
+        fontSize: '10px',
+        fontStyle: 'bold',
+        color: '#4a5568'
+      }
+    );
+    this.mapModal.add(legend);
+  }
+
+  addMapPin(x, y, color, label) {
+    const pin = this.add.circle(x, y, 6, color, 1)
+      .setStrokeStyle(2, this.palette.ink);
+
+    const tag = this.add.text(x, y - 14, label, {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '9px',
+      fontStyle: 'bold',
+      color: '#1e2530',
+      backgroundColor: '#f6f3ec',
+      padding: { x: 4, y: 1 }
+    }).setOrigin(0.5);
+
+    this.mapModal.add([pin, tag]);
+  }
+
+  toggleWorldMap() {
+    this.isMapOpen = !this.isMapOpen;
+    this.mapModal.setVisible(this.isMapOpen);
+    this.mapBtnLabel.setText(this.isMapOpen ? '✕ CLOSE [M]' : '🗺️ MAP [M]');
   }
 }
