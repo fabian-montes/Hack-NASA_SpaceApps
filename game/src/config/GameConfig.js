@@ -1,5 +1,6 @@
 // game/src/config/GameConfig.js
 import { WorldScene } from '../scenes/WorldScene.js';
+import { UIScene } from '../scenes/UIScene.js';
 
 export const GameConfig = {
   type: Phaser.AUTO,
@@ -19,5 +20,5 @@ export const GameConfig = {
       debug: false
     }
   },
-  scene: [WorldScene]
+  scene: [WorldScene, UIScene]
 };

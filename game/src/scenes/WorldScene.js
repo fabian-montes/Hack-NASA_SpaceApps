@@ -62,6 +62,7 @@ export class WorldScene extends Phaser.Scene {
       padding: { x: 10, y: 8 }
     }).setScrollFactor(0).setDepth(9999);
 
+    this.scene.launch('UIScene');
     this.createFullscreenButton();
   }
 
