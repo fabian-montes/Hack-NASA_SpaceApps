@@ -72,6 +72,22 @@ export class CrewNPC extends BaseEntity {
       backgroundColor: '#c53030',
       padding: { x: 6, y: 2 }
     }).setOrigin(0.5).setDepth(y + 20);
+
+    this.sosRing = scene.add.circle(x, y, 28)
+      .setStrokeStyle(2, 0xc53030, 0.85)
+      .setDepth(y - 2);
+
+    this.sosTween = scene.tweens.add({
+      targets: this.sosRing,
+      scale: 1.45,
+      alpha: 0,
+      duration: 1100,
+      repeat: -1
+    });
+
+    // Y dentro de heal() en CrewNPC.js, detén y elimina el anillo:
+    if (this.sosTween) this.sosTween.stop();
+    if (this.sosRing) this.sosRing.destroy();
   }
 
   heal() {

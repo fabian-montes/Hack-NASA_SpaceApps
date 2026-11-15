@@ -4,10 +4,11 @@ export class MobileControls {
     this.scene = uiScene;
     this.vector = { x: 0, y: 0 };
     this.isActive = !this.scene.sys.game.device.os.desktop;
+    this.nearbyInjuredNPC = null;
 
     if (!this.isActive) return;
 
-    // Enable extra pointer for simultaneous move + build tap
+    // Enable multi-touch (Joystick + Action Button simultaneously)
     this.scene.input.addPointer(1);
 
     const { width, height } = this.scene.cameras.main;
@@ -21,18 +22,15 @@ export class MobileControls {
     this.maxRadius = 48;
     this.activePointerId = null;
 
-    // Outer papercut joystick ring
     this.baseShadow = this.scene.add.circle(baseX + 3, baseY + 3, this.maxRadius, 0x1e2530, 0.9).setDepth(300);
     this.baseRing = this.scene.add.circle(baseX, baseY, this.maxRadius, 0xf6f3ec, 0.85)
       .setStrokeStyle(2.5, 0x1e2530)
       .setDepth(301);
 
-    // Movable thumb stick
     this.thumb = this.scene.add.circle(baseX, baseY, 22, 0xe05a36, 0.95)
       .setStrokeStyle(2, 0x1e2530)
       .setDepth(302);
 
-    // Interactive touch zone around the joystick
     const hitZone = this.scene.add.circle(baseX, baseY, this.maxRadius + 28, 0x000000, 0)
       .setInteractive()
       .setDepth(303);
@@ -80,22 +78,21 @@ export class MobileControls {
       this.baseY + Math.sin(angle) * clampedDist
     );
 
-    // Normalized directional vector (-1 to 1)
     const force = clampedDist / this.maxRadius;
     this.vector.x = Math.cos(angle) * force;
     this.vector.y = Math.sin(angle) * force;
   }
 
   createActionButton(x, y) {
-    const radius = 34;
+    const radius = 36;
 
-    const shadow = this.scene.add.circle(x + 3, y + 3, radius, 0x1e2530, 1).setDepth(300);
-    const btn = this.scene.add.circle(x, y, radius, 0x2a9d8f, 0.95)
+    this.actionShadow = this.scene.add.circle(x + 3, y + 3, radius, 0x1e2530, 1).setDepth(300);
+    this.actionBtn = this.scene.add.circle(x, y, radius, 0x2a9d8f, 0.95)
       .setStrokeStyle(2.5, 0x1e2530)
       .setInteractive()
       .setDepth(301);
 
-    const label = this.scene.add.text(x, y, '📡\nBUILD', {
+    this.actionLabel = this.scene.add.text(x, y, '📡\nBUILD', {
       fontFamily: 'JetBrains Mono, monospace',
       fontSize: '11px',
       fontStyle: 'bold',
@@ -103,20 +100,76 @@ export class MobileControls {
       align: 'center'
     }).setOrigin(0.5).setDepth(302);
 
-    // First tap opens holographic preview; second tap deploys the Comms Probe
-    btn.on('pointerdown', () => {
+    this.actionBtn.on('pointerdown', () => {
       const worldScene = this.scene.scene.get('WorldScene');
-      if (!worldScene || !worldScene.buildSystem) return;
+      if (!worldScene) return;
 
+      // Priority 1: Heal nearby injured crew member
+      if (this.nearbyInjuredNPC && this.nearbyInjuredNPC.state === 'INJURED') {
+        worldScene.player.play('build', true);
+        this.nearbyInjuredNPC.heal();
+        this.nearbyInjuredNPC = null;
+        return;
+      }
+
+      // Priority 2: Build / Deploy Comms Probe
+      if (!worldScene.buildSystem) return;
       if (!worldScene.buildSystem.isBuildMode) {
         worldScene.buildSystem.toggleBuildMode();
-        label.setText('✓\nDEPLOY');
-        btn.setFillStyle(0xe05a36, 0.95);
       } else {
         worldScene.buildSystem.tryDeployProbe();
-        label.setText('📡\nBUILD');
-        btn.setFillStyle(0x2a9d8f, 0.95);
       }
     });
+  }
+
+  /**
+   * Called every frame by UIScene.update() to swap button to [✚ HEAL] when close to an injured NPC
+   */
+  update() {
+    if (!this.isActive || !this.actionBtn) return;
+
+    const worldScene = this.scene.scene.get('WorldScene');
+    if (!worldScene || !worldScene.player || !worldScene.crewGroup) return;
+
+    // Find closest injured crew member within 105px
+    let closest = null;
+    let minDist = 105;
+
+    worldScene.crewGroup.getChildren().forEach((npc) => {
+      if (npc.state === 'INJURED') {
+        const d = Phaser.Math.Distance.Between(
+          worldScene.player.x,
+          worldScene.player.y,
+          npc.x,
+          npc.y
+        );
+        if (d <= minDist) {
+          minDist = d;
+          closest = npc;
+        }
+      }
+    });
+
+    this.nearbyInjuredNPC = closest;
+
+    // Update contextual icon & color
+    if (this.nearbyInjuredNPC) {
+      this.actionBtn.setFillStyle(0xc53030, 0.98); // Emergency Medical Red
+      this.actionLabel.setText('✚\nHEAL');
+      const pulse = 1 + Math.sin(this.scene.time.now * 0.012) * 0.07;
+      this.actionBtn.setScale(pulse);
+      this.actionLabel.setScale(pulse);
+    } else {
+      this.actionBtn.setScale(1);
+      this.actionLabel.setScale(1);
+
+      if (worldScene.buildSystem && worldScene.buildSystem.isBuildMode) {
+        this.actionBtn.setFillStyle(0xe05a36, 0.95);
+        this.actionLabel.setText('✓\nDEPLOY');
+      } else {
+        this.actionBtn.setFillStyle(0x2a9d8f, 0.95);
+        this.actionLabel.setText('📡\nBUILD');
+      }
+    }
   }
 }

@@ -428,4 +428,10 @@ export class UIScene extends Phaser.Scene {
     this.mapModal.setVisible(this.isMapOpen);
     this.mapBtnLabel.setText(this.isMapOpen ? '✕ CLOSE [M]' : '🗺️ MAP [M]');
   }
+
+  update() {
+    if (this.mobileControls) {
+      this.mobileControls.update();
+    }
+  }
 }
