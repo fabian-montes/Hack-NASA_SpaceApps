@@ -6,8 +6,8 @@ export class MapGenerator {
     {
       key: 'env_rocks',
       path: 'assets/objects/rocks.png',
-      frameWidth: 128,
-      frameHeight: 128,
+      frameWidth: 2048 / 4,
+      frameHeight: 2048 / 4,
       frames: [0, 1, 2, 3], // Adjust indices to your rock/crater frames
       count: 45,
       solid: true,
@@ -17,8 +17,8 @@ export class MapGenerator {
     {
       key: 'env_trees',
       path: 'assets/objects/trees.png',
-      frameWidth: 160,
-      frameHeight: 192,
+      frameWidth: 2048 / 6,
+      frameHeight: 2048 / 6,
       frames: [0, 1, 2, 3], // Adjust indices to your alien tree frames
       count: 35,
       solid: true,
@@ -28,8 +28,8 @@ export class MapGenerator {
     {
       key: 'env_vegetation',
       path: 'assets/objects/vegetation.png',
-      frameWidth: 96,
-      frameHeight: 96,
+      frameWidth: 2048 / 6,
+      frameHeight: 2048 / 6,
       frames: [0, 1, 2, 3, 4, 5], // Plants & flowers
       count: 85,
       solid: false, // Walkable ground flora

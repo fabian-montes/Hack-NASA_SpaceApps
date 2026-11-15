@@ -54,5 +54,7 @@ export class WorldProp extends BaseEntity {
       this.shadow.setPosition(this.x, this.y + this.displayHeight * 0.42);
       this.shadow.setDepth(this.y - 1);
     }
+
+    this.setScale(0.30);
   }
 }
