@@ -2,6 +2,8 @@
 import { Character } from '../entities/Character.js';
 import { PlanetGround } from '../systems/PlanetGround.js';
 import { MapGenerator } from '../systems/MapGenerator.js';
+import { CommsProbe } from '../entities/CommsProbe.js';
+import { BuildSystem } from '../systems/BuildSystem.js';
 
 const PLANET_THEMES = {
   MARS:   { ground: 0xd97254, propTint: 0xffd6c9 },
@@ -18,6 +20,7 @@ export class WorldScene extends Phaser.Scene {
   preload() {
     Character.preload(this);
     MapGenerator.preload(this);
+    CommsProbe.preload(this);
   }
 
   create() {
@@ -49,6 +52,8 @@ export class WorldScene extends Phaser.Scene {
     // 4. Player Character & Collisions
     this.player = new Character(this, 1200, 1200);
     this.physics.add.collider(this.player, obstacles);
+    this.buildSystem = new BuildSystem(this, this.player, obstacles);
+    this.physics.add.collider(this.player, this.buildSystem.deployedProbes);
 
     // 5. Camera Follow
     this.cameras.main.startFollow(this.player, true, 0.12, 0.12);
@@ -68,6 +73,7 @@ export class WorldScene extends Phaser.Scene {
 
   update() {
     this.player.update();
+    this.buildSystem.update();
 
     const currentAnim = this.player.anims.currentAnim
       ? this.player.anims.currentAnim.key.toUpperCase()
