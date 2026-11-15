@@ -4,6 +4,7 @@ import { PlanetGround } from '../systems/PlanetGround.js';
 import { MapGenerator } from '../systems/MapGenerator.js';
 import { CommsProbe } from '../entities/CommsProbe.js';
 import { BuildSystem } from '../systems/BuildSystem.js';
+import { CrewNPC } from '../entities/CrewNPC.js';
 
 const PLANET_THEMES = {
   MARS:   { ground: 0xd97254, propTint: 0xffd6c9 },
@@ -26,6 +27,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   preload() {
+    CrewNPC.preload(this);
     Character.preload(this);
     MapGenerator.preload(this);
     CommsProbe.preload(this);
@@ -77,9 +79,10 @@ export class WorldScene extends Phaser.Scene {
 
     this.scene.launch('UIScene');
     this.createFullscreenButton();
+    this.spawnCrewMembers(WORLD_WIDTH, WORLD_HEIGHT, obstacles);
   }
 
-  update() {
+  update(time) {
     this.player.update();
     this.buildSystem.update();
 
@@ -93,6 +96,8 @@ export class WorldScene extends Phaser.Scene {
       `State: ${currentAnim}`,
       `O2: ${this.player.stats.oxygen}% | PWR: ${this.player.stats.power}%`
     ]);
+
+    this.crewGroup.getChildren().forEach((npc) => npc.update(time));
   }
 
   createFullscreenButton() {
@@ -127,5 +132,46 @@ export class WorldScene extends Phaser.Scene {
 
     // Optional keyboard shortcut: 'F' key
     this.input.keyboard.on('keydown-F', toggleScreen);
+  }
+
+  spawnCrewMembers(worldW, worldH, obstacles) {
+    this.crewGroup = this.physics.add.group();
+
+    // Spawn selected crew (excluding 'commander' which is the player) or default survivors
+    const npcIds = (this.missionData.crew || ['cadets', 'specialist', 'dog'])
+      .filter((id) => id !== 'commander');
+
+    npcIds.forEach((id, idx) => {
+      const angle = (idx / Math.max(1, npcIds.length)) * Math.PI * 2;
+      const dist = Phaser.Math.Between(220, 480);
+      const sx = Phaser.Math.Clamp(this.player.x + Math.cos(angle) * dist, 150, worldW - 150);
+      const sy = Phaser.Math.Clamp(this.player.y + Math.sin(angle) * dist, 150, worldH - 150);
+
+      const npc = new CrewNPC(this, sx, sy, id);
+      npc.setInteractive({ useHandCursor: true });
+
+      // Allow healing via tap/click when close (supports mobile & mouse)
+      npc.on('pointerdown', () => {
+        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, npc.x, npc.y) <= 95) {
+          npc.heal();
+        }
+      });
+
+      this.crewGroup.add(npc);
+    });
+
+    // Prevent healed NPCs from walking through rocks or trees
+    this.physics.add.collider(this.crewGroup, obstacles);
+
+    // Desktop 'E' key interaction to heal nearby injured crew
+    this.input.keyboard.on('keydown-E', () => {
+      this.crewGroup.getChildren().forEach((npc) => {
+        if (npc.state === 'INJURED' &&
+            Phaser.Math.Distance.Between(this.player.x, this.player.y, npc.x, npc.y) <= 95) {
+          this.player.play('build', true);
+          npc.heal();
+        }
+      });
+    });
   }
 }
