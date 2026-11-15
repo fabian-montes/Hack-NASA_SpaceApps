@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRASHLANDED | Junior Astronaut Mission Trainer</title>
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Global Base CSS + Fullscreen Landing CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/landing.css">
+</head>
+<body class="landing-no-scroll">
+
+  <!-- 1. GLOBAL PAPERCUT NAVBAR -->
+   
+  <nav class="site-navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-dot"></span>
+        CRASHLANDED <span class="brand-sub">// SYS.2026</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="pages/lore.html">01 // SYNOPSIS</a></li>
+        <li><a href="pages/solution.html">02 // THE SOLUTION</a></li>
+        <li><a href="pages/about.html">03 // ABOUT & CREATOR</a></li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <!-- 2. FULLSCREEN HERO STAGE (ZERO SCROLL) -->
+  <main class="hero-stage">
+    
+    <!-- GAME COVER ARTWORK: Replace src with your custom illustration path -->
+    <div class="hero-art-wrapper">
+      <img 
+        src="./img/Hero-cover.jpg" 
+        alt="CRASHLANDED Key Art" 
+        class="hero-bg-art"
+      >
+      <!-- Subtle watercolor/paper vignette so text remains 100% readable -->
+      <div class="hero-art-overlay"></div>
+    </div>
+
+    <!-- CENTERED PAPERCUT CALLOUT CARD -->
+    <div class="container hero-center-wrapper">
+      <div class="hero-papercut-card">
+        
+        <!-- NASA Tag -->
+        <div class="telemetry-status">
+          <span class="pulse-dot"></span>
+          <span>2026 NASA SPACE APPS CHALLENGE // JUNIOR ASTRONAUT MISSION TRAINER</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="glitch-title">CRASHLANDED</h1>
+
+        <!-- Concept Text -->
+        <p class="hero-lead">
+          A mission goes wrong. Choose your perspective in a hand-drawn 2.5D world: 
+          survive the trek to an extraction point after a crash landing, or lead a time-critical rescue expedition with finite supplies.
+        </p>
+
+        <!-- Primary & Secondary CTAs -->
+        <div class="hero-actions">
+          <a href="game.html" class="btn btn-play">
+            ▶ PLAY NOW
+          </a>
+          <a href="mission-data.html" class="btn btn-outline">
+            EXPLORE MISSION DATA →
+          </a>
+        </div>
+
+        <!-- Short Feature Tags -->
+        <div class="quick-specs">
+          <span>⚡ ZERO-INSTALL WEB GAME</span>
+          <span>🛰️ NASA DONKI & OSDR DATA</span>
+          <span>⚖️ REAL ENGINEERING TRADE-OFFS</span>
+          <span>🧭 2.5D OPEN-WORLD LORE</span>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

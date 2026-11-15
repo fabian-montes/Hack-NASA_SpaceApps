@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Solution & Tech Stack | CRASHLANDED</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Global Base CSS + Solution Specific CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/lore.css">
+</head>
+<body>
+
+  <!-- GLOBAL PAPERCUT NAVBAR -->
+  <nav class="site-navbar">
+    <div class="container navbar-inner">
+      <a href="../index.html" class="nav-brand">
+        <span class="brand-dot"></span>
+        CRASHLANDED <span class="brand-sub">// SYS.2026</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="lore.html">01 // SYNOPSIS</a></li>
+        <li><a href="solution.html" class="active">02 // THE SOLUTION</a></li>
+        <li><a href="about.html">03 // ABOUT & CREATOR</a></li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <main>
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+      <div class="container">
+        <span class="section-tag">// TECHNICAL ARCHITECTURE & GAMEPLAY</span>
+        <h1 class="solution-title">THE SOLUTION: CRASHLANDED</h1>
+        <p class="solution-subtitle">
+          A zero-install, browser-playable 2.5D survival simulator transforming real NASA aerospace engineering constraints into an engaging experience.
+        </p>
+      </div>
+    </header>
+
+    <!-- 1. VALUE PROPOSITION & TRADE-OFFS -->
+    <section class="sol-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">// 01. CORE DESIGN PRINCIPLE</span>
+          <h2>ZERO FREE CHOICES</h2>
+          <p>Every action carries a real resource cost that compounds over time, mirroring authentic mission planning[cite: 7].</p>
+        </div>
+
+        <div class="value-banner">
+          <div class="value-item">
+            <span class="value-label">RESOURCE BALANCE</span>
+            <strong>OXYGEN, POWER & SHIELDING</strong>
+            <p>Diverting power to electromagnetic shielding during a solar storm protects your crew from radiation, but freezes hydroponic crops and drains life support[cite: 1, 7].</p>
+          </div>
+          <div class="value-item">
+            <span class="value-label">ACCESSIBILITY</span>
+            <strong>ZERO BARRIER TO ENTRY</strong>
+            <p>Built with vanilla ES6 modules and Phaser 3 on GitHub Pages. Instant browser play with no downloads, accounts, or heavy hardware required[cite: 2, 4, 7].</p>
+          </div>
+          <div class="value-item">
+            <span class="value-label">DUAL AUDIENCE</span>
+            <strong>SCALABLE DIFFICULTY</strong>
+            <p>Intuitive tooltips and 3 core systems for younger players, scaling up to full psychological, hunger, and hydroponic management in Hardcore Mode[cite: 1, 7].</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. GAME MODES (LORE-DRIVEN MECHANICS) -->
+    <section class="sol-section alt-bg">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">// 02. GAMEPLAY VARIANTS</span>
+          <h2>CHOOSE YOUR PERSPECTIVE</h2>
+          <p>Two distinct operational variants derived from the core narrative of a mission gone wrong[cite: 5].</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="telemetry-card">
+            <div class="card-code">MODE_01 // THE SURVIVORS</div>
+            <h3>Trek to the Extraction Point</h3>
+            <p>
+              Stranded after a catastrophic crash landing, your crew must stay healthy, brave real solar storms, and complete science and resource missions while navigating across hazardous procedural terrain toward the extraction coordinates[cite: 5].
+            </p>
+          </article>
+
+          <article class="telemetry-card">
+            <div class="card-code">MODE_02 // THE RESCUE SQUAD</div>
+            <h3>Race Against the Clock</h3>
+            <p>
+              Deploy with strictly limited supplies to locate your missing comrades before their life support fails. Master real space mission logistics, ration every watt of power, and chart the unknown[cite: 5].
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TECH STACK -->
+    <section class="sol-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">// 03. ENGINEERING INFRASTRUCTURE</span>
+          <h2>MODULAR TECH STACK</h2>
+          <p>Engineered with clean ES6 architecture and strict adherence to DRY (Don't Repeat Yourself) principles[cite: 2].</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <span class="feature-num">01</span>
+            <h3>Phaser 3 Engine</h3>
+            <p>Lightweight 2.5D rendering utilizing Y-depth sorting (`setDepth`) and smooth camera follow mechanics without complex 3D overhead[cite: 2, 4].</p>
+          </article>
+
+          <article class="feature-card">
+            <span class="feature-num">02</span>
+            <h3>NASA Open Data Integration</h3>
+            <p>Dynamic event triggers backed by NASA's <strong>DONKI</strong> (space weather/solar flares) and <strong>OSDR</strong> (biological stress metrics)[cite: 1, 5, 7].</p>
+          </article>
+
+          <article class="feature-card">
+            <span class="feature-num">03</span>
+            <h3>Procedural Generation</h3>
+            <p>Simplex-noise world generation distributing interactive terrain, craters, and historical space artifacts seamlessly[cite: 2, 4].</p>
+          </article>
+
+          <article class="feature-card">
+            <span class="feature-num">04</span>
+            <h3>Data-Driven Design</h3>
+            <p>Decoupled JSON configurations for structures, entities, and easter eggs allowing rapid balance tuning and educational tooltips[cite: 2, 5].</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>CRASHLANDED // 2026 NASA SPACE APPS CHALLENGE</span>
+      <span>TRACK: BUILD A JUNIOR ASTRONAUT MISSION TRAINER</span>
+    </div>
+  </footer>
+
+</body>
+</html>

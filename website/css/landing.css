@@ -1,91 +1,263 @@
 /* ==========================================================================
-   OUTPOST HORIZONS - LANDING PAGE STYLES (landing.css)
-   Specific to index.html: Hero, Cards, Grids, and NASA Telemetry Banner
+   OUTPOST HORIZONS / CRASHLANDED - COMPLETE LANDING CSS (web/css/landing.css)
    ========================================================================== */
 
-/* Hero Section */
-.hero-section {
-  min-height: 88vh;
+/* 1. Zero-Scroll Fullscreen Lock for index.html */
+body.landing-no-scroll {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Stage container that holds both the absolute background and centered text */
+.hero-stage {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 64px);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* 2. Background Artwork (Pinned behind everything with position: absolute) */
+.hero-art-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-bg-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  /* 0.0s -> 0.6s: Page illuminates revealing the background */
+  animation: bgQuickFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0s both;
+}
+
+.hero-art-overlay {
+  display: none;
+}
+
+/* 3. Foreground Content Box (Floating ON TOP of the background at center) */
+.hero-center-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.hero-papercut-card {
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 1rem;
+  max-width: 920px;
+  width: 100%;
   text-align: center;
-  padding: 4rem 0 2rem;
-  border-bottom: 1px solid var(--border-line);
-  background: radial-gradient(circle at 50% 30%, rgba(0, 229, 255, 0.09) 0%, transparent 65%);
+}
+
+/* 4. Title Crash-Land at 1.6s (after 1s of clean background) + Wave Loop at 2.45s */
+.glitch-title {
+  display: inline-block;
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--ink-dark);
+  text-shadow: 
+    -2px -2px 0 #f6f3ec,
+     2px -2px 0 #f6f3ec,
+    -2px  2px 0 #f6f3ec,
+     2px  2px 0 #f6f3ec,
+     5px  5px 0 var(--ink-dark);
+  margin-bottom: 0.85rem;
+  will-change: transform, opacity;
+  animation: 
+    titleCrashIn 0.85s cubic-bezier(0.2, 0.9, 0.3, 1) 1.6s both,
+    titleWaveLoop 3.2s ease-in-out 2.45s infinite;
+}
+
+/* 5. Secondary Elements (Appear 0.5s after title finishes impact = 2.95s) */
+.telemetry-status,
+.hero-lead,
+.hero-actions,
+.quick-specs {
+  will-change: transform, opacity;
+  animation: uiFadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 2.95s both;
 }
 
 .telemetry-status {
+  font-family: var(--font-mono);
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.35rem 1rem;
-  background: rgba(0, 229, 255, 0.08);
-  border: 1px solid var(--border-line);
-  border-radius: var(--radius-sm);
-  font-size: 0.78rem;
-  color: var(--accent-cyan);
-  letter-spacing: 1.5px;
-  margin-bottom: 1.5rem;
+  padding: 0.35rem 0.95rem;
+  background: var(--bg-card);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-paper-sm);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  margin-bottom: 1rem;
 }
 
 .pulse-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background-color: var(--accent-green);
+  border: 1.5px solid var(--ink-dark);
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-green);
-}
-
-.glitch-title {
-  font-size: clamp(2.6rem, 6vw, 4.8rem);
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-shadow: 0 0 24px rgba(0, 229, 255, 0.3);
-  margin-bottom: 1.25rem;
 }
 
 .hero-lead {
-  max-width: 700px;
-  margin: 0 auto 2.5rem;
-  color: var(--text-muted);
-  font-size: 1.05rem;
+  max-width: 650px;
+  margin: 0 auto 1.6rem;
+  color: var(--ink-dark);
+  font-weight: 600;
+  font-size: clamp(0.98rem, 1.35vw, 1.12rem);
+  text-shadow: 
+    0px 0px 10px rgba(246, 243, 236, 0.95),
+    0px 0px 4px rgba(246, 243, 236, 1);
 }
 
 .hero-actions {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.1rem;
   flex-wrap: wrap;
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Single-Line Smaller Feature Tags */
 .quick-specs {
+  font-family: var(--font-mono);
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  border-top: 1px dashed rgba(122, 151, 184, 0.25);
-  padding-top: 1.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--ink-dark);
+  padding-top: 0.25rem;
+  max-width: 100%;
 }
 
-/* Info Sections & Grids */
+.quick-specs span {
+  background: var(--bg-card);
+  padding: 0.22rem 0.55rem;
+  border: 1.5px solid var(--ink-dark);
+  border-radius: 5px;
+  box-shadow: 2px 2px 0px var(--ink-dark);
+}
+
+/* ==========================================================================
+   6. KEYFRAMES (Choreography)
+   ========================================================================== */
+
+@keyframes bgQuickFadeIn {
+  0% {
+    opacity: 0;
+    filter: brightness(1.8) blur(6px);
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1) blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes titleCrashIn {
+  0% {
+    opacity: 0;
+    transform: translateX(110vw) skewX(-18deg) scale(1.1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-18px) skewX(8deg) scale(1.04, 0.94);
+  }
+  62% {
+    opacity: 1;
+    transform: translate(14px, -6px) rotate(2.5deg);
+  }
+  72% {
+    opacity: 1;
+    transform: translate(-10px, 5px) rotate(-2deg);
+  }
+  82% {
+    opacity: 1;
+    transform: translate(7px, -4px) rotate(1.2deg);
+  }
+  92% {
+    opacity: 1;
+    transform: translate(-4px, 2px) rotate(-0.6deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes titleWaveLoop {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) skewX(0deg);
+  }
+  25% {
+    transform: translateY(-6px) rotate(-1.2deg) skewX(-1.5deg);
+  }
+  50% {
+    transform: translateY(0px) rotate(0deg) skewX(0deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(1.2deg) skewX(1.5deg);
+  }
+}
+
+@keyframes uiFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   7. MISSION DATA PAGE SECTIONS (Shared with mission-data.html)
+   ========================================================================== */
 .info-section {
   padding: 4.5rem 0;
-  border-top: 1px solid var(--border-subtle);
+  border-bottom: var(--border-ink);
 }
 
 .alt-bg {
-  background: rgba(12, 20, 32, 0.5);
+  background-color: rgba(235, 229, 216, 0.55);
 }
 
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .grid-2 {
@@ -94,131 +266,33 @@
   gap: 2rem;
 }
 
-/* Telemetry Cards */
 .telemetry-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-line);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-paper);
   padding: 2rem;
   border-radius: var(--radius-sm);
 }
 
-.telemetry-card.warning-border {
-  border-color: rgba(255, 109, 0, 0.5);
-}
-
 .card-code {
+  font-family: var(--font-mono);
   font-size: 0.75rem;
+  font-weight: 700;
   color: var(--accent-cyan);
-  margin-bottom: 0.75rem;
-  letter-spacing: 1px;
+  background: var(--accent-cyan-wash);
+  border: 1.5px solid var(--ink-dark);
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.85rem;
 }
 
 .telemetry-card h3 {
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   margin-bottom: 0.75rem;
 }
 
 .telemetry-card p {
   color: var(--text-muted);
-  font-size: 0.92rem;
-}
-
-/* Difficulty Protocol Cards */
-.protocol-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag-cyan,
-.tag-orange {
-  font-size: 0.72rem;
-  padding: 0.2rem 0.6rem;
-  font-weight: bold;
-  border-radius: var(--radius-sm);
-}
-
-.tag-cyan {
-  background: var(--accent-cyan-glow);
-  color: var(--accent-cyan);
-  border: 1px solid var(--accent-cyan);
-}
-
-.tag-orange {
-  background: var(--accent-orange-glow);
-  color: var(--accent-orange);
-  border: 1px solid var(--accent-orange);
-}
-
-.telemetry-list {
-  margin-top: 1.25rem;
-  padding-left: 1.2rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.telemetry-list li {
-  margin-bottom: 0.6rem;
-}
-
-.telemetry-list strong {
-  color: var(--text-primary);
-}
-
-/* NASA Open Data Banner */
-.nasa-data-panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-line);
-  padding: 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.nasa-panel-text {
-  flex: 1 1 500px;
-}
-
-.nasa-panel-text h2 {
-  margin-bottom: 0.75rem;
-}
-
-.nasa-panel-text p {
-  color: var(--text-muted);
-}
-
-.nasa-panel-badges {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.data-badge {
-  background: var(--bg-deep);
-  border: 1px solid var(--accent-cyan);
-  padding: 1rem 1.25rem;
-  display: flex;
-  flex-direction: column;
-  min-width: 180px;
-}
-
-.data-badge span {
-  font-size: 0.7rem;
-  color: var(--accent-cyan);
-}
-
-.data-badge strong {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  margin: 0.2rem 0;
-}
-
-.data-badge small {
-  color: var(--text-muted);
-  font-size: 0.75rem;
+  font-size: 0.96rem;
 }
