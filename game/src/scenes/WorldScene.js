@@ -1,13 +1,13 @@
 // game/src/scenes/WorldScene.js
 import { Character } from '../entities/Character.js';
 import { PlanetGround } from '../systems/PlanetGround.js';
+import { MapGenerator } from '../systems/MapGenerator.js';
 
-// Planet surface presets (Pale Watercolor Palette)
-const PLANET_PALETTES = {
-  MARS: 0xd97254,     // Terracotta rust
-  MOON: 0xcbd2d9,     // Regolith ash grey
-  EUROPA: 0x90cdf4,   // Pale glacial cyan
-  TITAN: 0xd69e2e     // Ochre hydrocarbon haze
+const PLANET_THEMES = {
+  MARS:   { ground: 0xd97254, propTint: 0xffd6c9 },
+  MOON:   { ground: 0xcbd2d9, propTint: 0xe2e8f0 },
+  EUROPA: { ground: 0x90cdf4, propTint: 0xb2f5ea },
+  TITAN:  { ground: 0xd69e2e, propTint: 0xfefcbf }
 };
 
 export class WorldScene extends Phaser.Scene {
@@ -17,31 +17,43 @@ export class WorldScene extends Phaser.Scene {
 
   preload() {
     Character.preload(this);
+    MapGenerator.preload(this);
   }
 
   create() {
-    const WORLD_WIDTH = 2000;
-    const WORLD_HEIGHT = 2000;
+    const WORLD_WIDTH = 2400;
+    const WORLD_HEIGHT = 2400;
+    const currentPlanet = PLANET_THEMES.MARS;
 
-    // 1. Set World Boundaries
+    // 1. World Boundaries
     this.physics.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
     this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-    // 2. Procedural Watercolor Planet Surface
+    // 2. Procedural Watercolor Ground
     this.ground = new PlanetGround(
       this,
       WORLD_WIDTH,
       WORLD_HEIGHT,
-      PLANET_PALETTES.MARS // <-- Cambia aquí a MOON, EUROPA o TITAN
+      currentPlanet.ground
     );
 
-    // 3. Instantiate Player Character at Center
-    this.player = new Character(this, 1000, 1000);
+    // 3. Procedural Environment Props (Rocks, Trees, Vegetation)
+    const mapGen = new MapGenerator(
+      this,
+      WORLD_WIDTH,
+      WORLD_HEIGHT,
+      currentPlanet.propTint
+    );
+    const obstacles = mapGen.generate({ x: 1200, y: 1200, radius: 240 });
 
-    // 4. Smooth Camera Follow
-    this.cameras.main.startFollow(this.player, true, 0.15, 0.15);
+    // 4. Player Character & Collisions
+    this.player = new Character(this, 1200, 1200);
+    this.physics.add.collider(this.player, obstacles);
 
-    // 5. Debug HUD
+    // 5. Camera Follow
+    this.cameras.main.startFollow(this.player, true, 0.12, 0.12);
+
+    // 6. Debug HUD
     this.debugText = this.add.text(20, 20, '', {
       fontFamily: 'JetBrains Mono, monospace',
       fontSize: '14px',
@@ -59,7 +71,7 @@ export class WorldScene extends Phaser.Scene {
       : 'IDLE';
 
     this.debugText.setText([
-      'OUTPOST HORIZONS // PLANET SURFACE TEST',
+      'OUTPOST HORIZONS // PROCEDURAL BIOME TEST',
       'Controls: [ARROW KEYS] Move | [SPACE] Build',
       `State: ${currentAnim}`,
       `O2: ${this.player.stats.oxygen}% | PWR: ${this.player.stats.power}%`
